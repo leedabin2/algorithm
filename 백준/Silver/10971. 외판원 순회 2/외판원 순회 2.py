@@ -1,8 +1,6 @@
 import sys
 n = int(sys.stdin.readline())
 
-graph = [[] for _ in range(n)]
-
 map_city = [list(map(int,sys.stdin.readline().split())) for _ in range(n)]
 
 visited = [False] * n
@@ -27,11 +25,6 @@ def dfs(city, path, cost):
             dfs(next_city, path + [next_city], cost + map_city[city][next_city])
             visited[next_city] = False
 
-
-# 각 노드에 연결된 정보 저장(노드,비용)
-for i in range(n):
-    for j in range(len(map_city)):
-        graph[i].append((j,map_city[i][j]))
 
 # 각 도시마다 방문
 for i in range(n):
