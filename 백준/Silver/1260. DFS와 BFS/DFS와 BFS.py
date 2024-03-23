@@ -5,26 +5,8 @@ N, M, V = map(int,sys.stdin.readline().split())
 
 graph = [[] for _ in range(N+1)]
 
-visited = [0] * (N+1)
-visited1 = [0] * (N+1)
-
-def dfs(graph, v, visited):
-    visited[v] = 1
-    print(v,end=' ')
-    for i in graph[v]:
-        if not visited[i]:
-            dfs(graph,i,visited)
-
-def bfs(graph, v, visited1):
-    queue = deque([v])
-    visited1[v] = 1
-    while queue:
-        val = queue.popleft()
-        print(val,end=' ')
-        for i in graph[val]:
-            if not visited1[i]:
-                queue.append(i)
-                visited1[i] = 1
+visited_dfs = [0] * (N+1)
+visited_bfs = [0] * (N+1)
 
 for _ in range(M):
     a,b = map(int,sys.stdin.readline().split())
@@ -34,6 +16,26 @@ for _ in range(M):
 for i in graph:
     i.sort()
 
-dfs(graph, V, visited)
+def dfs(node):
+    visited_dfs[node] = 1
+    print(node,end=' ')
+    for nxt in graph[node]:
+        if not visited_dfs[nxt]:
+            dfs(nxt)
+
+def bfs(V):
+    q = deque([V])
+
+    while q:
+        node = q.popleft()
+        visited_bfs[V] = 1
+        print(node,end=' ')
+
+        for nxt in graph[node]:
+            if not visited_bfs[nxt]:
+                q.append(nxt)
+                visited_bfs[nxt] = 1
+
+dfs(V)
 print()
-bfs(graph, V, visited1)
+bfs(V)
