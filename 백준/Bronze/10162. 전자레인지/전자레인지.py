@@ -3,23 +3,14 @@ import sys
 N = int(sys.stdin.readline().rstrip())
 A, B, C = 300,60,10
 
-a_count,b_count,c_count = 0,0,0
 
-les = N
-
-while les > 0:
-    if N >= A:
-        les = les-A
-        a_count += 1
-    elif N % 10 != 0:
-        print(-1)
-        break
-    elif A > les >= B:
-        les = les-B
-        b_count += 1
-    elif B > les >= C:
-        les = les-C
-        c_count += 1
-
-if a_count or b_count or c_count != 0:
+if N % C != 0:
+    print(-1)
+else:
+    a_count = N // A
+    N %= A
+    b_count = N // B
+    N %= B
+    c_count = N // C
+    N %= C
     print(a_count,b_count,c_count)
