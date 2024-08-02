@@ -1,7 +1,7 @@
 import sys
 
 n = int(sys.stdin.readline().rstrip())
-words = sys.stdin.readline().rstrip()
+words = sys.stdin.readline()
 
 ans = ''
 total = 0
@@ -13,6 +13,4 @@ for i in words:
             total += int(ans)
             ans = ''
 
-if ans:
-    total += int(ans)
 print(total)
