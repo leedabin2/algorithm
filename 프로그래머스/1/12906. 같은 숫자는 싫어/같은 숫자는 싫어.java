@@ -11,14 +11,12 @@ public class Solution {
         answer.push(arr1.remove(0));
         
         for (int i : arr1) {
-            if (i != answer.peek()) {
-                answer.push(i);
+            if (i != answer.peekLast()) {
+                answer.add(i);
             }
         }
-        List<Integer> list = new LinkedList<>(answer);
-        Collections.reverse(list);
 
         
-        return list.stream().mapToInt(i->i).toArray();
+        return answer.stream().mapToInt(i->i).toArray();
     }
 }
