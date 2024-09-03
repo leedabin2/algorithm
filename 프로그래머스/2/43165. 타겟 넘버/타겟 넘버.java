@@ -1,23 +1,37 @@
+import java.util.*;
+
 class Solution {
     public int solution(int[] numbers, int target) {
-        return recur(0,numbers,target,0);
+        int answer = 0;
+        List<int[]> tuple = new ArrayList<>();
+        for (int num : numbers) {
+            tuple.add(new int[]{-num,num});
+        }
+     
+        List<Integer> sum = new ArrayList<>();
+        product(tuple,0,0,sum);
+        
+        int cnt = 0;
+        for (int s : sum) {
+            if (s == target) {
+                cnt++;
+            }
+        }
+            
+        return cnt;
     }
     
-    public int recur(int index, int[] number, int target, int curr) {
-        int res = 0;
-        if (index == number.length) {
-            if (target == curr){
-                return 1;
-            }else {
-                return 0;
-            }
-               
+    public void product(List<int[]> tuple, int index, int curr, List<Integer> sum) {
+        if (index == tuple.size()) {
+            sum.add(curr);
+            return;
         }
         
-         int add = recur(index+1,number,target,curr + number[index]);
-         int minus = recur(index+1,number,target,curr - number[index]);
+        for (int v : tuple.get(index)) {
         
-        return add + minus;
+             product(tuple,index+1,curr+v,sum);
+        }
         
+         
     }
 }
