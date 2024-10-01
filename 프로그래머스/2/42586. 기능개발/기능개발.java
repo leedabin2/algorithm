@@ -2,39 +2,30 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-    
-        // 작업 일수
-        Deque<Integer> workDays = new ArrayDeque<>();
-
-        for (int i = 0 ; i < progresses.length; i++) {
-            int work = 1;
-            while ((speeds[i] * work) + progresses[i] < 100) {
-                work += 1;
-            }
-            workDays.add(work);
-        }
-
-        List<Integer> result = new ArrayList<>();
-        int deploy = 1;
-        int current = workDays.poll(); 
-
-        while (!workDays.isEmpty()) {
-            int next = workDays.poll();
-
-            if (next <= current) {
+       
+        Deque<Integer> q = new ArrayDeque<>();
+        double n = 1.0;
+       
+        for (int i = 0; i < speeds.length ; i++) {
+            n = (100.0 - progresses[i]) /speeds[i];
+            int roundedValue = (int) Math.ceil(n);
+            q.offer(roundedValue);
            
-                deploy++;
-            } else {
-            
-                result.add(deploy);
-                deploy = 1;
-                current = next;
+        }
+    
+        List<Integer> result = new ArrayList<>();
+
+        while(!q.isEmpty()) {
+            int depoly = q.poll();
+            int count = 1;
+            while(!q.isEmpty() && depoly >= q.peek()){
+                q.poll();
+                count++;
             }
+            result.add(count);
         }
         
-      
-        result.add(deploy);
-        
+    
         return result.stream().mapToInt(i->i).toArray();
     }
 }
