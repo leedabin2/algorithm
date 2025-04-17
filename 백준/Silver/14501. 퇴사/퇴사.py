@@ -1,15 +1,38 @@
 import sys
+from collections import deque
+input = sys.stdin.readline
 
-N = int(sys.stdin.readline().rstrip())
+n = int(input())
+calender = [[] for _ in range(n+1)]
+for i in range(1,n+1):
+    t, p = map(int,input().split())
+    calender[i] = [t,p]
 
-sangdam = [list(map(int,sys.stdin.readline().split())) for _ in range(N)]
+max_cost = 0
+def bfs(start_day,st,sp):
+    global max_cost
+    queue = deque()
+    queue.append((start_day,sp))
 
-dp = [0 for _ in range(N+1)]
+    while queue:
+        day, profit = queue.popleft()
+        max_cost = max(max_cost, profit)
+        if day > n:
+            continue
+        if day <= n:
+            t, p = calender[day]
 
-for idx in range(N)[::-1]:
-    if idx + sangdam[idx][0] > N:
-        dp[idx] = dp[idx+1]
-    else:
-        dp[idx] = max(dp[idx+sangdam[idx][0]] + sangdam[idx][1],dp[idx+1])
+            if day + t <= n + 1:
+                queue.append((day+t, profit + p))
 
-print(max(dp))
+            queue.append((day+1,profit))
+
+
+for i in range(1,n+1):
+    t, p = calender[i]
+    bfs(i,0,0)
+
+print(max_cost)
+
+
+
