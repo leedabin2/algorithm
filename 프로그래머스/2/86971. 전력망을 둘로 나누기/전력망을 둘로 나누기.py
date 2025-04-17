@@ -1,39 +1,34 @@
 from collections import deque
-
-def bfs(start,graph):
-    
-    visited = [0] * len(graph)
-    visited[start] = 1
+def bfs(start,graph,n,visited):
+    count = 1
     queue = deque([start])
-    cnt = 1
+    visited[start] = 1
     
     while queue:
-        node = queue.popleft()
-        for next_node in graph[node]:
-            if not visited[next_node]:
-                visited[next_node] = 1
-                queue.append(next_node)
-                cnt += 1
-
-    return cnt;
-    
-
-def solution(n, wires):
-    answer = float('inf')
-    
-    for i in range(len(wires)):
+        nxt_node = queue.popleft()
+        for n in graph[nxt_node]:
+            if not visited[n]:
+                visited[n] = 1
+                queue.append(n)
+                count += 1
+    return count
         
-        temp = wires[:i] + wires[i+1:]
-      
-        graph = [ [] for i in range(1,n+2)]
-        for wire in temp:
-            graph[wire[0]].append(wire[1])
-            graph[wire[1]].append(wire[0])
-
-        res = bfs(1,graph)
-        diff = abs(res - (n - res)) 
-        answer = min(answer, diff) 
-        min_answer = min(answer,res)
-
+def solution(n, wires):
+    min_diff = n
+    for i in range(len(wires)):
+        graph = [[] for _ in range(n+1)]
+        for j in range(len(wires)):
+            if i == j:
+                continue
+            a, b = wires[j]
             
-    return min_answer
+            graph[a].append(b)
+            graph[b].append(a)     
+    
+        visited = [0] * (n+1)
+        graph_count = bfs(1,graph,n,visited)
+        diff = abs((n - graph_count) - graph_count)
+    
+        min_diff = min(diff,min_diff)
+    
+    return min_diff
