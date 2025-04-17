@@ -1,17 +1,16 @@
-import sys
 from itertools import combinations
-
-
-def lotto(n):
-    for i in combinations(n,6):
-        result = " ".join(map(str,i))
-        print(result)
-
-
+import sys
+input = sys.stdin.readline
 
 while True:
-    test = list(map(int,sys.stdin.readline().split()))
-    if test[0] == 0:
+    data = list(map(int, input().split()))
+    k = data[0]
+
+    if k == 0:
         break
-    lotto(test[1:])
+
+    nums = data[1:]
+    for comb in combinations(nums, 6):
+        print(*comb)
     print()
+
