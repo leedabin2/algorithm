@@ -1,31 +1,32 @@
-import sys
 from collections import deque
-
+import sys
 N, M, K, X = map(int, sys.stdin.readline().split())
-
-graph = [[] for _ in range(N+1)]
-distance = [-1] * (N+1)
-distance[X] = 0
+graph = [[] for _ in range(N + 1)]
 
 for _ in range(M):
     a, b = map(int, sys.stdin.readline().split())
     graph[a].append(b)
 
-q = deque([X])
 
-while q:
-    node = q.popleft()
+dist = [-1] * (N + 1)
+visited = [0] * (N+1)
+dist[X] = 0
+visited[X] = 1
+queue = deque([X])
 
-    for nxt in graph[node]:
-        if distance[nxt] == -1:
-            distance[nxt] = distance[node] + 1
-            q.append(nxt)
+while queue:
+    now = queue.popleft()
+    for nxt in graph[now]:
+        if dist[nxt] == -1 and not visited[nxt]:
+            visited[nxt] = 1
+            dist[nxt] = dist[now] + 1
+            queue.append(nxt)
 
-if K not in distance:
-    print(-1)
+# 거리 K인 노드 찾기
+res = [i for i in range(1, N + 1) if dist[i] == K]
+
+if res:
+    for city in sorted(res):
+        print(city)
 else:
-    for i in range(len(distance)):
-        if distance[i] == K:
-            print(i)
-
-
+    print(-1)
