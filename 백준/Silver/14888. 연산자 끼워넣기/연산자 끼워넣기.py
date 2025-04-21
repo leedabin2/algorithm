@@ -1,29 +1,38 @@
 import sys
-N = int(sys.stdin.readline())
+from collections import deque
 
-nums = list(map(int,sys.stdin.readline().split()))
-add, sub, mul, div = map(int,sys.stdin.readline().split())
+N = int(sys.stdin.readline().rstrip())
+A = list(map(int,sys.stdin.readline().split()))
+plus, minus, mul, div = map(int,sys.stdin.readline().split())
 
-min_num, max_num = int(1e9), int(-1e9)
+queue = deque()
+queue.append([A[0],plus,minus,mul,div,1])
 
-def dfs(n,sm,add,sub,mul,div):
-    global min_num,max_num
+max_res = -10000000000
+min_res = 10000000000
 
-    if n == N:
-        min_num = min(min_num, sm)
-        max_num = max(max_num, sm)
-        return
+while queue:
+    num, plus, minus, mul, div, depth = queue.popleft()
 
-    if add > 0:
-        dfs(n+1,sm + nums[n],add-1,sub,mul,div)
-    if sub > 0:
-        dfs(n+1,sm - nums[n],add,sub-1,mul,div)
+    if depth == N:
+        max_res = max(max_res,num)
+        min_res = min(min_res,num)
+        continue
+
+    next_num = A[depth]
+
+    if plus > 0:
+        queue.append([num+next_num, plus-1,minus,mul,div,depth+1])
+    if minus > 0:
+        queue.append([num-next_num,plus,minus-1,mul,div,depth+1])
     if mul > 0:
-        dfs(n + 1, sm * nums[n], add, sub, mul-1, div)
+        queue.append([num * next_num, plus, minus, mul-1, div, depth + 1])
     if div > 0:
-        dfs(n+1,int(sm/nums[n]),add,sub,mul,div-1)
+        if num < 0 and next_num > 0:
+            change_num = -(abs(num) // next_num)
+            queue.append([change_num, plus, minus, mul, div-1, depth + 1])
+        else:
+            queue.append([num // next_num, plus, minus, mul, div-1, depth + 1])
 
-
-dfs(1,nums[0],add,sub,mul,div)
-
-print(max_num, min_num, sep='\n')
+print(max_res)
+print(min_res)
