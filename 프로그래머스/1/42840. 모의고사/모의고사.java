@@ -2,32 +2,43 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] answers) {
-        int[] answer = {0,0,0};
+
+        int[] oneAnswer = {1,2,3,4,5};
+        int[] twoAnswer = {2,1,2,3,2,4,2,5};
+        int[] threeAnswer = {3,3,1,1,2,2,4,4,5,5};
+        int n = answers.length;
+        int one = 0;
+        int two = 0;
+        int three = 0;
         
-        int[] answer1 = {1,2,3,4,5};
-        int[] answer2 = {2,1,2,3,2,4,2,5};
-        int[] answer3 = {3,3,1,1,2,2,4,4,5,5};
-        
-        
-        for (int i = 0; i < answers.length; i++) {
-            if (answers[i] == answer1[i % answer1.length]) {
-                answer[0]++;
-            } 
-            if (answers[i] == answer2[i % answer2.length]) {
-                answer[1]++;
+        for (int i = 0; i < n; i++) {
+            if (answers[i] == oneAnswer[i % oneAnswer.length ]) {
+                one++;
             }
-            if (answers[i] == answer3[i % answer3.length]) {
-                answer[2]++;
+            if (answers[i] == twoAnswer[i % twoAnswer.length]) {
+                two++;
+            }
+            if (answers[i] == threeAnswer[i % threeAnswer.length]) {
+                three++;
             }
         }
-    
-        int maxScore = Math.max(answer[0], Math.max(answer[1], answer[2]));
-    
-        List<Integer> top = new ArrayList<>();
-        if (answer[0] == maxScore) top.add(1);
-        if (answer[1] == maxScore) top.add(2);
-        if (answer[2] == maxScore) top.add(3);
         
-        return top.stream().mapToInt(i->i).toArray();
+        int maxWin = Math.max(one,Math.max(two,three));
+        List<Integer> res = new ArrayList<>();
+   
+        if (maxWin == one) {
+            res.add(1);
+        }
+        if (maxWin == two) {
+            res.add(2);
+        }
+        if (maxWin == three) {
+            res.add(3);
+        }
+            
+        
+        return res.stream().mapToInt(Integer::intValue).toArray();
+
+        
     }
 }
