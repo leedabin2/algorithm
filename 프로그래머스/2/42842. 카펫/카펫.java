@@ -1,20 +1,24 @@
 class Solution {
     public int[] solution(int brown, int yellow) {
-
-        int[] answer = {};        
+        int[] answer = new int[2];
         int total = brown + yellow;
-        
-        for (int i = 1; i < (total/2)+1; i++ ) {
-                            
-            if (total % i == 0) {
-                int width = total / i;
-                 if ((width - 2) *(i - 2) == yellow) {
-                        return new int[]{width,i};
-                 }
+        int w = total / 2; // 가로
+
+        while (w > 0) {
+            int h = total / w;
+            if (w < h) {
+                break;
             }
-              
-            
+            if ((w * h) == total) {
+                int yellowCount = (w-2) * (h-2);
+                if (yellowCount == yellow) {
+                    answer = new int[]{w,h};
+                    break;
+                }    
+            }
+            w--;
         }
+
         return answer;
     }
 }
