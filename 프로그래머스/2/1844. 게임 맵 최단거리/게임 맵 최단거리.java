@@ -1,40 +1,48 @@
 import java.util.*;
-
+// 5 : 55
 class Solution {
+  static int n, m;
+    static boolean[][] visited;
+    static int[][] directions;
     public int solution(int[][] maps) {
         int answer = 0;
-        int n = maps.length;
-        int m = maps[0].length;
-        
-        int[][] dist = {{-1,0},{1,0},{0,-1},{0,1}};
-        boolean[][] visited = new boolean[n][m];
-        visited[0][0] = true;
-        Deque<int[]> q= new ArrayDeque<>();
-        q.offer(new int[] {0,0,1});
-        while(!q.isEmpty()) {
-            int[] curr = q.poll();
-            int currX = curr[0];
-            int currY = curr[1];
-            int distance = curr[2];
-            
-            if (currX == n-1 && currY == m-1) {
-                return distance;
-            }
-            
-            for (int[] d : dist) {
-                int nx = d[0] + currX;
-                int ny = d[1] + currY;
-                
-                if (0 > nx || nx > n-1 || 0 > ny || ny > m-1) {
-                    continue;
-                }
-                
-                if (maps[nx][ny] == 1 && !visited[nx][ny]) {
-                    visited[nx][ny] = true;
-                    q.offer(new int[] {nx,ny,distance+1});
-                }
-            }
-        }
-        return -1;
+        n = maps.length;
+        m = maps[0].length;
+        visited = new boolean[n][m];
+        directions = new int[][]{{-1,0},{0,1},{1,0},{0,-1}};
+        answer = bfs(0, 0, 1, maps);
+        return answer;
     }
+    private static int bfs(int x, int y,int d, int[][] maps) {
+      Deque<int[]> queue = new ArrayDeque<>();
+      queue.add(new int[]{x,y,d});
+      visited[x][y] = true;
+
+      while (!queue.isEmpty()) {
+        int[] c = queue.poll();
+        int cx = c[0];
+        int cy = c[1];
+        int dist = c[2];
+
+        if (cx == n-1 && cy == m-1) {
+          return dist;
+        }
+
+        for (int[] dir : directions) {
+          int nx = dir[0] + cx;
+          int ny = dir[1] + cy;
+
+          if ( 0 <= nx && nx < n && 0<= ny && ny < m && maps[nx][ny] == 1) {
+            if (!visited[nx][ny]) {
+              visited[nx][ny] = true;
+              queue.add(new int[]{nx,ny,dist+1});
+            }
+          }
+        }
+      }
+
+      return -1;
+
+    }
+
 }
