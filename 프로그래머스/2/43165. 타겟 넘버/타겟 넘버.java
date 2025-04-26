@@ -1,37 +1,20 @@
-import java.util.*;
-
 class Solution {
-    public int solution(int[] numbers, int target) {
-        int answer = 0;
-        List<int[]> tuple = new ArrayList<>();
-        for (int num : numbers) {
-            tuple.add(new int[]{-num,num});
-        }
-     
-        List<Integer> sum = new ArrayList<>();
-        product(tuple,0,0,sum);
-        
-        int cnt = 0;
-        for (int s : sum) {
-            if (s == target) {
-                cnt++;
-            }
-        }
-            
-        return cnt;
+    public int solution(int[] numbers, int target) {  
+        return dfs(0,numbers,target,0);
     }
-    
-    public void product(List<int[]> tuple, int index, int curr, List<Integer> sum) {
-        if (index == tuple.size()) {
-            sum.add(curr);
-            return;
+    private int dfs(int idx, int[] numbers, int target, int value) {
+        
+        if (idx == numbers.length) {
+            if (value == target) {
+                return 1;
+            }
+            return 0;
         }
         
-        for (int v : tuple.get(index)) {
+        int add = dfs(idx+1,numbers,target,value + numbers[idx]);
+        int minus = dfs(idx+1,numbers,target,value - numbers[idx]);
         
-             product(tuple,index+1,curr+v,sum);
-        }
-        
-         
+        return add + minus;
+          
     }
 }
