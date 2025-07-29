@@ -1,5 +1,7 @@
-SELECT DISTINCT A.CART_ID
-FROM CART_PRODUCTS AS A
-JOIN CART_PRODUCTS AS B ON A.CART_ID = B.CART_ID
-WHERE A.NAME = 'Milk' AND B.NAME = 'Yogurt'
-ORDER BY A.CART_ID;
+-- 코드를 입력하세요
+SELECT CART_ID
+from CART_PRODUCTS
+where NAME IN ('Milk', 'Yogurt')
+group by cart_id
+having count(DISTINCT name) > 1
+order by cart_id;
