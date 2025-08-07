@@ -1,33 +1,39 @@
-import java.util.PriorityQueue;
 import java.util.*;
 
 class Solution {
     public int solution(int[] priorities, int location) {
-      
         int answer = 0;
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
-        for (int p : priorities) {
-            pq.offer(p);
+        int n = priorities.length;
+        Deque<int[]> queue = new ArrayDeque<>();
+        
+        for (int i =0; i < n; i++ ) {
+            queue.add(new int[]{i,priorities[i]}); // idx, 중요도
         }
-      
-        while (!pq.isEmpty()) {
-            for (int i = 0; i < priorities.length; i++) {
-                if (priorities[i] == pq.peek()) {
-                    pq.poll();
-                    answer += 1;
-                    if (i == location) {
-                        return answer;
-                    }
+        
+        int order = 0;
+        
+        while(!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            
+            boolean isHigher = false;
+            
+            for (int[] q : queue) {
+                if (q[1] > curr[1]) {
+                    isHigher = true;
+                    break;
+                }
+            }
+            
+            if (isHigher) {
+                queue.addLast(curr);
+            } else {
+                order++;
+                if (curr[0] == location) {
+                    return order;
                 }
             }
         }
-        
-        return answer;
-        
-        
-        
             
-        
-        
+        return answer;
     }
 }
