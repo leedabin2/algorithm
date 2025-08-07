@@ -4,29 +4,30 @@ import java.io.*;
 class Main {
   public static void main(String[] args) throws IOException {
     BufferedReader br  = new BufferedReader(new InputStreamReader(System.in));
+
     String[] st = br.readLine().split(" ");
     int N = Integer.parseInt(st[0]);
     int S = Integer.parseInt(st[1]);
 
-    int[] numbers = new int[N];
-    String[] row = br.readLine().split(" ");
-    for (int i = 0; i < N; i++) numbers[i] = Integer.parseInt(row[i]);
+    String[] input = br.readLine().split(" ");
 
+    int[] arr = new int[N];
+    for (int i = 0; i < N; i++) arr[i] = Integer.parseInt(input[i]);
 
-    int minLength = Integer.MAX_VALUE;
-    int left = 0;
+    int start = 0;
     int sum = 0;
-    
-    for (int right = 0; right < N; right++) {
-      sum += numbers[right];
+    int minLen = Integer.MAX_VALUE;
+    for (int end = 0; end < N; end++) {
+      sum += arr[end];
 
       while(sum >= S) {
-        minLength = Math.min(minLength, right-left+1);
-        sum -= numbers[left++];
+        minLen = Math.min(minLen, end - start + 1);
+        sum -= arr[start];
+        start++;
       }
-
     }
 
-    System.out.print(minLength == Integer.MAX_VALUE ? 0 : minLength);
+    System.out.println(minLen == Integer.MAX_VALUE ? 0 : minLen);
+
   }
 } 
