@@ -1,49 +1,61 @@
 import java.util.*;
-
 class Solution {
-    Set<Set<String>> result = new HashSet<>();
     public int solution(String[] user_id, String[] banned_id) {
         int answer = 0;
-        Set<String> res = new HashSet<>();
-        List<List<String>> matching = new ArrayList<>();
+        // fr*d* : {frodo, fradi}, abc1** : {abc123}
+        // *rodo : {frodo, crodo}, *rodo : {frodo, crodo}, ***** : {abc123, frodoc}
+        // fr*d* : {frodo, fradi}, *rodo : {frodo, crodo}, ***** : {abc123, frodoc},  ***** : {abc123, frodoc}
         
-        for (String banned : banned_id) {
-            List<String> matched = new ArrayList<>();
-            for (String user : user_id) {
-                if (isMatch(user,banned)){
-                    matched.add(user);
+        Map<String,Set<String>> map = new HashMap<>();
+        
+  
+        for (String banId : banned_id) {
+            Set<String> matchingUsers = new HashSet<>();
+            for (String userId : user_id) {
+                if (isMatch(banId, userId)) {
+                    matchingUsers.add(userId);
                 }
             }
-            matching.add(matched);
+            map.put(banId, matchingUsers);
         }
- 
-        findCombination(new HashSet<>(),matching,0 );
-     
-        return result.size();
+        
+        // 중복 제거된 유효한 사용자 ID 조합을 찾음
+        List<Set<String>> candidates = new ArrayList<>();
+        for (String banId : banned_id) {
+            candidates.add(map.get(banId));  
+        }
+
+        Set<Set<String>> uniqueCombinations = new HashSet<>();
+        findCombinations(candidates, 0, new HashSet<>(), uniqueCombinations);
+        
+        answer = uniqueCombinations.size(); // 가능한 경우의 수
+        
+        
+        return answer;
     }
-    private boolean isMatch(String user, String banned) {
-        if (user.length() != banned.length()) {
-            return false;
-        }
-        for (int i = 0; i < banned.length(); i++) {
-            if (banned.charAt(i) != '*' && banned.charAt(i) != user.charAt(i)) {
-                return false;
-            }
+    private boolean isMatch(String banId, String userId) {
+        if (banId.length() != userId.length()) return false;
+        
+        for (int i =0; i < banId.length(); i++) {
+            if (banId.charAt(i) != '*' && banId.charAt(i) != userId.charAt(i)) return false;
         }
         return true;
     }
-    private void findCombination(Set<String> curr , List<List<String>> matching, int index) {
-     
-        if (index == matching.size()) {
-            result.add(new HashSet<>(curr));
+     // 모든 가능한 조합을 찾는 재귀 함수
+    private void findCombinations(List<Set<String>> candidates, int idx, Set<String> currentSet, Set<Set<String>> uniqueCombinations) {
+        if (idx == candidates.size()) {
+            uniqueCombinations.add(new HashSet<>(currentSet));
             return;
         }
-        for (String user :matching.get(index) ) {
-            if (!curr.contains(user)) {
-                curr.add(user);
-                findCombination(curr, matching, index+1);
-                curr.remove(user);
+        
+        for (String userId : candidates.get(idx)) {
+            if (!currentSet.contains(userId)) {
+                currentSet.add(userId);
+                findCombinations(candidates, idx + 1, currentSet, uniqueCombinations);
+                currentSet.remove(userId);
             }
         }
     }
+ 
+
 }
