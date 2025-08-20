@@ -2,47 +2,57 @@ import java.util.*;
 import java.io.*;
 
 class Main {
-  static int max = 0;
-  static String[] board;
-  static int N, M;
   static int[][] directions = new int[][]{{-1,0},{0,1},{1,0},{0,-1}};
-  static boolean[] visited = new boolean[26];
+  static int answer = 0;
+  static char[][] board;
+  static int R, C;
+  static int[] alpabet;
   public static void main(String[] args) throws IOException {
     BufferedReader br  = new BufferedReader(new InputStreamReader(System.in));
+    // 1 : 25
+
+    alpabet = new int[101];
 
     String[] st = br.readLine().split(" ");
-    N = Integer.parseInt(st[0]);
-    M = Integer.parseInt(st[1]);
+    R = Integer.parseInt(st[0]);
+    C = Integer.parseInt(st[1]);
 
-    board = new String[N];
+    board = new char[R][C];
 
-    for (int i = 0; i < N; i++) {
-      String row = br.readLine();
+    for (int i =0; i < R; i++) {
+      String[] row = br.readLine().split("");
 
-      board[i] = row;
+      for (int j = 0; j < C; j++) {
+        board[i][j] = row[j].charAt(0);
+      }
     }
 
-    visited[board[0].charAt(0) - 'A'] = true;
-    dfs(0,0, 1);
-    System.out.print(max);
-  }
+    alpabet[board[0][0] - 0] = 1;
 
-  static void dfs(int x, int y, int cnt) {
-    max = Math.max(max, cnt);
+    dfs(0, 0, 1);
+    
+    System.out.print(answer);
+
+
+  }
+  static private void dfs(int x, int y, int cnt) {
+
+    answer = Math.max(cnt, answer);
+
+    char cur = board[x][y];
 
     for (int[] dir : directions) {
       int nx = dir[0] + x;
       int ny = dir[1] + y;
 
-      if (0<= nx && nx < N && 0 <= ny && ny < M) {
-        if (!visited[board[nx].charAt(ny) - 'A']) {
-          visited[board[nx].charAt(ny) - 'A'] = true;
+      if (nx >=0 && nx < R && ny >=0 && ny < C) {
+        char next = board[nx][ny];
+        if (alpabet[next] != 1) {
+          alpabet[next]++;
           dfs(nx, ny, cnt+1);
-          visited[board[nx].charAt(ny) - 'A']  = false;
+          alpabet[next]--;
         }
       }
     }
   }
-
-
-} 
+}
