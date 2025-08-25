@@ -2,84 +2,86 @@ import java.util.*;
 import java.io.*;
 
 class Main {
-  static int N, M;
-  static Character[][] board;
-  static int[][] directions;
-  static int[][] fireTime, jihoonTime;
+  static int[][] directions = new int[][]{{-1,0},{0, 1}, {1,0}, {0,-1}};
+  static int[][] fireTime;
+  static int[][] jihunTime;
   public static void main(String[] args) throws IOException {
     BufferedReader br  = new BufferedReader(new InputStreamReader(System.in));
+    // 1 : 46
     String[] st = br.readLine().split(" ");
-    N = Integer.parseInt(st[0]);
-    M = Integer.parseInt(st[1]);
-    board = new Character[N][M];
-    fireTime = new int[N][M];
-    jihoonTime = new int[N][M];
 
-    directions = new int[][]{{-1,0},{1,0},{0,1},{0,-1}};
-    for (int i = 0; i < N; i++) {
-      String l = br.readLine();
-      for (int j = 0; j < M; j++) {
-        board[i][j] = l.charAt(j);
+    int R = Integer.parseInt(st[0]);
+    int C = Integer.parseInt(st[1]);
+
+    char[][] board = new char[R][C];
+    fireTime = new int[R][C];
+    jihunTime = new int[R][C];
+
+    Deque<int[]> fireQ = new ArrayDeque<>();
+    Deque<int[]> jihunQ = new ArrayDeque<>();
+    for (int i = 0; i < R; i++) {
+      String row = br.readLine();
+      for (int j = 0; j < C; j++) {
+        board[i][j] = row.charAt(j);
         fireTime[i][j] = -1;
-        jihoonTime[i][j] = -1;
-      }
-    }
-
-    Deque<int[]> fireQueue = new ArrayDeque<>();
-    Deque<int[]> jihoonQueue = new ArrayDeque<>();
-
-  
-    for (int i = 0; i < N; i++) {
-      for (int j = 0; j < M; j++) {
+        jihunTime[i][j] = -1;
         if (board[i][j] == 'F') {
-          fireQueue.add(new int[]{i,j});
+          fireQ.add(new int[]{i,j});
           fireTime[i][j] = 0;
         }
         if (board[i][j] == 'J') {
-          jihoonQueue.add(new int[]{i,j});
-          jihoonTime[i][j] = 0;
+          jihunQ.add(new int[]{i,j});
+          jihunTime[i][j] = 0;
         }
       }
     }
 
-    while(!fireQueue.isEmpty()) {
-      int[] curr = fireQueue.poll();
-      for (int[] dir : directions) {
-        int nx = dir[0] + curr[0], ny = dir[1] + curr[1];
+    int time = 0;
 
-        if (0<=nx && nx < N && 0 <= ny && ny < M && board[nx][ny] == '.' && fireTime[nx][ny] == -1) {
-          fireTime[nx][ny] = fireTime[curr[0]][curr[1]] + 1;
-          fireQueue.add(new int[]{nx,ny});
-          
-        }
-      }
-    }
+    while(!fireQ.isEmpty()) {
+      int[] curr =fireQ.poll();
 
-    while(!jihoonQueue.isEmpty()) {
-      int[] curr = jihoonQueue.poll();
+      int cx = curr[0], cy = curr[1];
 
-      if (curr[0] == 0 || curr[0] == N-1 || curr[1] == 0 || curr[1] == M-1) {
-        System.out.print(jihoonTime[curr[0]][curr[1]] + 1);
-        return;
-      }
-      for (int[] dir : directions) {
-        int nx = dir[0] + curr[0], ny = dir[1] + curr[1];
-        if (0<=nx && nx < N && 0 <= ny && ny < M && board[nx][ny] == '.') {
-          if (jihoonTime[nx][ny] == -1 && (fireTime[nx][ny] == -1 || fireTime[nx][ny] > jihoonTime[curr[0]][curr[1]] + 1)) {
-            jihoonTime[nx][ny] = jihoonTime[curr[0]][curr[1]] + 1;
-            jihoonQueue.add(new int[]{nx,ny});
+      for (int[] d : directions) {
+        int nx = d[0] + cx, ny = d[1] + cy;
+
+        if (nx >= 0 && nx < R && 0 <= ny && ny < C) {
+          if (fireTime[nx][ny] == -1 && board[nx][ny] != '#') {
+            fireTime[nx][ny] = fireTime[cx][cy] + 1;
+            fireQ.add(new int[]{nx, ny});
           }
-         }
-         
+        }
       }
     }
+
+    while(!jihunQ.isEmpty()) {
+      int[] curr =jihunQ.poll();
+      int cx = curr[0], cy = curr[1];
+
+      for (int[] d : directions) {
+        int nx = d[0] + cx, ny = d[1] + cy;
+        if (nx < 0 || nx >= R || ny < 0 || ny >= C) {
+          System.out.println(jihunTime[cx][cy] + 1);
+          return;
+        }
+        if (jihunTime[nx][ny] != -1 || board[nx][ny] == '#') continue;
+        if (1 + jihunTime[cx][cy] < fireTime[nx][ny] || fireTime[nx][ny] == -1) {
+          jihunTime[nx][ny] = 1 + jihunTime[cx][cy];
+          jihunQ.add(new int[]{nx, ny});
+        }
+      }
+    }
+
+    
+  
+
+
+    
+    
 
     System.out.println("IMPOSSIBLE");
 
- 
-
-
 
   }
-
-}
+} 
