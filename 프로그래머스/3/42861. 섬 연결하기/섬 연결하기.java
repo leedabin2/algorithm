@@ -2,51 +2,49 @@ import java.util.*;
 class Solution {
     public int solution(int n, int[][] costs) {
         int answer = 0;
-    
-        Map<Integer,Map<Integer,Integer>> ans = new HashMap<>();
+        List<List<int[]>> graph = new ArrayList<>();
         
-        for (int[] cost : costs) {
-            int k = cost[0];
-            int node = cost[1];
-            int weight = cost[2];
-    
-            ans.putIfAbsent(k, new HashMap<>());
-            ans.putIfAbsent(node, new HashMap<>());
-            
-            ans.get(k).put(node,weight);
-            ans.get(node).put(k,weight);
+        for (int i = 0; i < n; i++) {
+             graph.add(new ArrayList<>());
         }
         
-    
-        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
-        Set<Integer> visited = new HashSet<>(); 
+        for (int[] cost : costs) {
+            int a = cost[0];
+            int b = cost[1];
+            int pay = cost[2];
+            
+            graph.get(a).add(new int[]{b, pay});
+            graph.get(b).add(new int[]{a, pay});
+        }
         
-
-        pq.add(new int[]{0, 0});
+        boolean[] visited = new boolean[n];
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
         
-
-        while (visited.size() < n) {
-            int[] curr = pq.poll();
-            int currentNode = curr[0];
-            int currentCost = curr[1];
+        visited[0] = true;
+        for (int[] edge : graph.get(0)) {
+            pq.add(new int[]{edge[0], edge[1]});
+        }
+        
+        int totalCost = 0;
+        
+        while(!pq.isEmpty()) {
+            int[] curr =pq.poll();
             
-      
-            if (visited.contains(currentNode)) {
-                continue;
-            }
+            int node = curr[0], currCost = curr[1];
             
+            if (visited[node]) continue;
+            visited[node] = true;
+            totalCost += currCost;
             
-            visited.add(currentNode);
-            answer += currentCost;
-            
-          
-            for (int nextNode : ans.get(currentNode).keySet()) {
-                if (!visited.contains(nextNode)) {
-    
-                    pq.add(new int[]{nextNode, ans.get(currentNode).get(nextNode)});
+            for (int[] next : graph.get(node)) {
+                int nextNode = next[0], cost = next[1];
+                if (!visited[nextNode]) {
+                    pq.add(new int[]{nextNode, cost});
                 }
             }
         }
-        return answer;
+        
+        
+        return totalCost;
     }
 }
