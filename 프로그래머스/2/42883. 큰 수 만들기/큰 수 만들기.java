@@ -1,23 +1,40 @@
 import java.util.*;
-
 class Solution {
     public String solution(String number, int k) {
-
-        StringBuilder result = new StringBuilder();
-        Integer len = number.length() - k;
-        Integer idx = 0;
-        for (int i=0; i < len; i++) {
-            char max = '0';
-            for (int j = idx; j <= k + i; j++) {
-                if (number.charAt(j) > max) {
-                    max = number.charAt(j);
-                    idx = j + 1;
-                }
-            }
-            result.append(max);
-        }
-   
+        String answer = "";
         
-        return result.toString();
+        // 1 2 3 1 2 3 4
+        // 현재거보다 다음게 작으면 현재거 pop
+        
+        int cnt = 0;
+        Stack<Character> stack = new Stack<>();
+        
+        char[] numbers = number.toCharArray();
+        
+        
+        for (char num : numbers) {
+            while(!stack.isEmpty() && cnt < k && stack.peek() < num) {
+                stack.pop();
+                cnt++;
+            }
+            stack.push(num); 
+        }
+        
+        
+        while(cnt < k) {
+            stack.pop();
+            cnt++;
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        for (char st : stack) {
+            sb.append(st);
+        }
+        
+      
+
+        
+        
+        return sb.toString();
     }
 }
