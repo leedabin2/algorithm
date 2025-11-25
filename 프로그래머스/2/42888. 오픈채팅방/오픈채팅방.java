@@ -2,40 +2,42 @@ import java.util.*;
 
 class Solution {
     public String[] solution(String[] record) {
-
-        Map<String,String> userMap = new HashMap<>();
-        List<String[]> actions = new ArrayList<>(); 
-        for (String info : record) {
-            String[] chatInfo = info.split(" ");
-            String command = chatInfo[0];
-            String userId = chatInfo[1];
-  
-            if (command.equals("Enter")) {
-                String nickName = chatInfo[2];
-                userMap.put(userId, nickName);
-                actions.add(new String[]{command,userId});
-            } else if (command.equals("Change")) {
-                String nickName = chatInfo[2];
-                userMap.put(userId,nickName);
+        
+        // uid1234 : {muzi} , uid4567 {prodo}
+        
+        Map<String, String> users = new HashMap<>();
+        List<String[]> logs = new ArrayList<>();
+        
+        
+        for (String r : record) {
+            String[] info = r.split(" ");
+            String cmd = info[0];
+            String id = info[1];
+            
+            if (cmd.equals("Enter")) {
+                String nick = info[2];
+                users.put(id, nick);
+                logs.add(new String[]{id, "enter"});
+            } else if (cmd.equals("Leave")) {
+                logs.add(new String[]{id, "leave"});
             } else {
-                 actions.add(new String[]{command,userId});
+                String nick = info[2];
+                users.put(id, nick);
             }
-             
         }
         
-        List<String> result = new ArrayList<>();
-        for (String[] action : actions) {
-            String command = action[0];
-            String userId = action[1];
-            String nickName = userMap.get(userId);
+        String[] answer = new String[logs.size()];
+        for (int i =0; i < logs.size(); i++) {
+            String id = logs.get(i)[0];
+            String cmd = logs.get(i)[1];
+            String nick = users.get(id);
             
-            if (command.equals("Enter")) {
-                result.add(nickName + "님이 들어왔습니다.");
+            if ("enter".equals(cmd)) {
+                answer[i] = nick + "님이 들어왔습니다.";
             } else {
-                result.add(nickName + "님이 나갔습니다.");
+                answer[i]= nick + "님이 나갔습니다.";
             }
         }
-
-        return result.toArray(new String[0]);
+        return answer;
     }
 }
