@@ -1,6 +1,6 @@
 # [level 3] 있었는데요 없었습니다 - 59043 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/59043?gad_source=1&gad_campaignid=22215033033&gbraid=0AAAAAC_c4nA7nS5qztYr0miYOqbHjMU59&gclid=Cj0KCQjw4qHEBhCDARIsALYKFNPHTjR7ftYlPquTSvcQLMN6o3SSDgVAWeCVOb2r-d6AccRIhBGLBGQaAg73EALw_wcB) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/59043) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@ Empty
 
 ### 제출 일자
 
-2025년 07월 30일 10:10:05
+2025년 11월 25일 12:05:51
 
 ### 문제 설명
 
