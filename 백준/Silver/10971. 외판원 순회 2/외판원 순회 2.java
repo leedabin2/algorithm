@@ -1,48 +1,49 @@
-import java.util.*;
 import java.io.*;
 
 class Main {
-  static int N;
-  static int[][] cost;
-  static int minCost = Integer.MAX_VALUE;
+  static int[][] w;
   static boolean[] visited;
-  public static void main(String[] args) throws IOException {
-    BufferedReader br  = new BufferedReader(new InputStreamReader(System.in));
+  static int N;
+  static int min = Integer.MAX_VALUE;
+   public static void main(String[] args) throws IOException {
+      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    N = Integer.parseInt(br.readLine());
+      N = Integer.parseInt(br.readLine());
 
-    cost = new int[N][N];
+      w = new int[N][N];
 
-    for (int i =0; i < N; i++) {
-      String[] row = br.readLine().split(" ");
-      for (int j =0; j < N; j++) {
-        cost[i][j] = Integer.parseInt(row[j]);
+      for (int i = 0; i < N; i++) {
+        String[] st = br.readLine().split(" ");
+
+        for (int j = 0; j < N; j++) {
+          w[i][j] = Integer.parseInt(st[j]);
+        }
+
       }
-    }
 
-    visited = new boolean[N];
-    visited[0] = true;
-    dfs(0, 0, 0, 1); 
+      visited = new boolean[N];
+      visited[0] = true;
 
-    System.out.println(minCost);
-  }
-  static void dfs(int start, int total, int now, int cnt) {
+      dfs(0,  0, 0, 1);
+
+      System.out.println(min);
+   }
+   static void dfs(int start, int now, int cost, int cnt) {
     if (cnt == N) {
-      if (cost[now][start] != 0) {
-        minCost = Math.min(minCost, total + cost[now][start]);
+      // 모두 방문한 경우
+      if (w[now][start] != 0) {
+        min = Math.min(min, cost + w[now][start]);
       }
       return;
     }
+
+
     for (int next = 0; next < N; next++) {
-      if (!visited[next] && cost[now][next] != 0) {
+      if (!visited[next] && w[now][next] != 0) {
         visited[next] = true;
-        dfs(start, total + cost[now][next], next, cnt+1);
+        dfs(start, next, cost + w[now][next], cnt+1);
         visited[next] = false;
       }
-
     }
-
-
-  }
-
-} 
+   }
+}
