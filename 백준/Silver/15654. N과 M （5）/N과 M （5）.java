@@ -1,48 +1,53 @@
 import java.io.*;
 import java.util.*;
+
 class Main {
   static int N, M;
-  static int[] arr;
+  static int[] numbers;
   static boolean[] visited;
+  static int[] result;
+  static StringBuilder sb = new StringBuilder();
    public static void main(String[] args) throws IOException {
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
       String[] st = br.readLine().split(" ");
 
       N = Integer.parseInt(st[0]);
-     M = Integer.parseInt(st[1]);
+      M = Integer.parseInt(st[1]);
 
-
-      arr = new int[N];
-      visited = new boolean[N];
-
-      String[] row = br.readLine().split(" ");
+      String[] line = br.readLine().split(" ");
+      numbers = new int[N];
       for (int i = 0; i < N; i++) {
-        arr[i] = Integer.parseInt(row[i]);
+        numbers[i] = Integer.parseInt(line[i]);
       }
 
-      Arrays.sort(arr);
+      Arrays.sort(numbers);
 
-    dfs(0,  "");
+      visited = new boolean[N];
+      result = new int[M];
 
+      dfs(0);
 
+      System.out.println(sb);
    }
-   static void dfs(int depth, String nums) {
+   static void dfs(int depth) {
     if (depth == M) {
-      System.out.println(nums);
+      for (int i =0; i < M; i++) {
+        sb.append(result[i]).append(" ");
+      }
+      sb.append("\n");
       return;
     }
 
     for (int i = 0; i < N; i++) {
       if (!visited[i]) {
         visited[i] = true;
-        if (nums.equals("")) {
-            dfs(depth + 1, arr[i] + "");
-        } else {
-            dfs(depth + 1, nums + " " + arr[i]);
-        }
+        result[depth] = numbers[i];
+        dfs(depth + 1);
         visited[i] = false;
       }
     }
+
+
    }
 }
