@@ -1,24 +1,32 @@
 import java.util.*;
+
 class Solution {
-    List<String> res = new ArrayList<>();
+    static int cnt = -1;
+    static int answer = 0;
+    static char[] alpabet = new char[]{'A', 'E', 'I', 'O', 'U'};
     public int solution(String word) {
-        int answer = 0;
-    
-        recur("");
-        Collections.sort(res);
-        answer = res.indexOf(word);
-     
+        
+        dfs(word, new StringBuilder());
+         
         return answer;
     }
-    private void recur(String curr) {
-        String[] arr = {"A", "E", "I", "O", "U"};
-        
-        if (curr.length() > 5) {
+    static void dfs(String word, StringBuilder sb) {
+        if (sb.length() > 5) {
             return;
         }
-        res.add(curr);
-        for (String a : arr) {
-            recur(curr+a);
+        
+        cnt++;
+        
+        if (sb.toString().equals(word)) {
+            answer = cnt;
+            return;
+        }
+        
+        
+        for (int i = 0 ; i < 5; i++) {
+            sb.append(alpabet[i]);
+            dfs(word, sb);
+            sb.deleteCharAt(sb.length() - 1);
         }
     }
 }
