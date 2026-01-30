@@ -1,39 +1,40 @@
 import java.util.*;
-
 class Solution {
     public int[] solution(String[] id_list, String[] report, int k) {
-
-        Map<String, Set<String>> map = new HashMap<>();
-        Map<String, Integer> mail = new HashMap<>();
+        
+        // 신고당한유저 : 신고한유저
+        Set<String> relations = new HashSet<>();
+        for (String r : report) {
+            relations.add(r); // "신고자 신고당한자"
+        }
+        // 신고당한 유저 : 횟수
+        Map<String, Integer> reportUsers = new HashMap<>();
+        // 유저 : 메일횟수
+        Map<String, Integer> userMail = new HashMap<>();
         for (String id : id_list) {
-            map.put(id, new HashSet<>());
-            mail.put(id, 0);
+            userMail.put(id, 0);
+        }
+
+        for (String r : relations) {
+            String[] info = r.split(" ");
+            String reported = info[1];
+            reportUsers.put(reported, reportUsers.getOrDefault(reported, 0) + 1);
         }
         
-        for (String rep : report) {
-            String[] st = rep.split(" ");
-            String from = st[0];
-            String to = st[1];
-            map.get(to).add(from); 
-        }
-        
-        // 정지된 유저 판별 후 메일 카운트
-        for (String target : map.keySet()) {
-            Set<String> reporters = map.get(target);
-            if (reporters.size() >= k) {
-                for (String reporter : reporters) {
-                    mail.put(reporter, mail.get(reporter) + 1);
-                }
+        for (String r : relations) {
+            String[] info = r.split(" ");
+            String reporter = info[0];
+            String reported = info[1];
+            if (reportUsers.get(reported) >= k) {
+                userMail.put(reporter, userMail.getOrDefault(reporter, 0) + 1);
             }
         }
         
-        int[] res = new int[id_list.length];
+        int[] answer = new int[id_list.length];
         for (int i = 0; i < id_list.length; i++) {
-            res[i] = mail.get(id_list[i]);
+            answer[i] = userMail.get(id_list[i]);
         }
         
-        
-        
-        return res;
+        return answer;
     }
 }
